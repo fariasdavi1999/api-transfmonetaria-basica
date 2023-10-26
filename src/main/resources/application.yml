@@ -1,0 +1,30 @@
+server:
+  port: ${SERVER_PORT:8080}
+  shutdown: graceful
+  forward-headers-strategy: framework
+  error:
+    whitelabel:
+      enabled: false
+  compression:
+    enabled: true
+    mime-types:
+      - application/json
+      - application/xml
+      - text/html
+      - text/xml
+      - text/plain
+spring:
+  application:
+    name: api-onboarding-dis
+  profiles:
+    active: ${ENV_PROFILE:local}
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/transfer}
+    driver-class-name: org.postgresql.Driver
+    username: ${DATABASE_USER_NAME:root}
+    password: ${DATABASE_USER_PASSWORD:root}
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    properties:
+      database-plataform: org.hibernate.dialect.PostgreSQLDialect
