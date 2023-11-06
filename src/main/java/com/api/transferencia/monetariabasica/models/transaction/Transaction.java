@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity(name = "transactions")
@@ -24,6 +25,14 @@ public class Transaction {
 
     private BigDecimal value;
 
+    @ManyToOne
+    @JoinColumn(name = "sender_id")
     private User sender;
+
+    @ManyToOne
+    @JoinColumn(name = "receiver_id")
+    private User receiver;
+
+    private LocalDateTime timestamp;
 
 }
