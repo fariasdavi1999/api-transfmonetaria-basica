@@ -20,7 +20,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void saveUser(User user){
+    public void saveUser(User user) {
         this.userRepository.save(user);
     }
 
@@ -37,7 +37,7 @@ public class UserService {
     public User findUserById(UUID id, Throwable error) {
         return this.userRepository.findUserById(id)
                 .orElseThrow(() -> new NotFoundException(
-                        "Usuário não encontrado", error));
+                        "Usuário não encontrado", error.getCause()));
     }
 
 }
