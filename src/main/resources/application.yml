@@ -28,3 +28,7 @@ spring:
     show-sql: true
     properties:
       database-plataform: org.hibernate.dialect.PostgreSQLDialect
+
+client:
+  authorization-mock:
+    url: https://run.mocky.io/v3/b0d824b8-9040-4929-8710-138e05c510aa
