@@ -10,21 +10,28 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
 
+    private final Logger logger;
+
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository,
+                       Logger logger) {
         this.userRepository = userRepository;
+        this.logger = logger;
     }
 
     public void saveUser(User user) {
         this.userRepository.save(user);
+        logger.info("Usuario salvo");
     }
 
     public void validatesTransaction(User sender, BigDecimal value) {
+        logger.info("Validando transaction");
         if (sender.getUserType() == UserType.TRADER) {
             throw new ValidateTransactionException(
                     "Usuário não pode realizar transações");

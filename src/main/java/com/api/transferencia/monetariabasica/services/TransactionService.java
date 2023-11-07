@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.logging.Logger;
 
 @Service
 public class TransactionService {
@@ -23,18 +24,23 @@ public class TransactionService {
     private final UserService userService;
 
     private final RestTemplate restTemplate;
+
+    private final Logger logger;
     @Value("${client.authorization-mock.url}")
     private String url;
 
     @Autowired
     public TransactionService(TransactionRepository transactionRepository,
-                              UserService userService, RestTemplate restTemplate) {
+                              UserService userService, RestTemplate restTemplate,
+                              Logger logger) {
         this.transactionRepository = transactionRepository;
         this.userService = userService;
         this.restTemplate = restTemplate;
+        this.logger = logger;
     }
 
     public void createTransaction(TransactionDTO transaction) {
+        logger.info("Criando Transaction");
         User sender = this.userService.findUserById(transaction.senderId());
         User receiver = this.userService.findUserById(transaction.receiverId());
 
@@ -42,6 +48,7 @@ public class TransactionService {
 
         boolean authorized = this.authorizedTransaction(sender, transaction.value());
         if (!authorized) {
+            logger.warning("Erro ao criar transaction");
             throw new CreateTransactionException("Transação inválida ou não autorizada");
         }
         persistTransaction(sender, transaction, receiver);
@@ -59,6 +66,7 @@ public class TransactionService {
 
     private void persistTransaction(User sender, TransactionDTO transaction,
                                     User receiver) {
+        logger.info("Persistindo transaction");
         Transaction newTransaction = new Transaction();
         newTransaction.setSender(sender);
         newTransaction.setValue(transaction.value());
