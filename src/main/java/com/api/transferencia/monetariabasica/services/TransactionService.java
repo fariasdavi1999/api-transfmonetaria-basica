@@ -1,10 +1,20 @@
 package com.api.transferencia.monetariabasica.services;
 
+import com.api.transferencia.monetariabasica.commons.exceptions.CreateTransactionException;
 import com.api.transferencia.monetariabasica.dtos.TransactionDTO;
+import com.api.transferencia.monetariabasica.models.transaction.Transaction;
 import com.api.transferencia.monetariabasica.models.user.User;
 import com.api.transferencia.monetariabasica.repositories.TransactionRepository;
+import org.hibernate.mapping.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Service
 public class TransactionService {
@@ -12,11 +22,16 @@ public class TransactionService {
 
     private final UserService userService;
 
+    private final RestTemplate restTemplate;
+    @Value("${client.authorization-mock.url}")
+    private String url;
+
     @Autowired
     public TransactionService(TransactionRepository transactionRepository,
-                              UserService userService) {
+                              UserService userService, RestTemplate restTemplate) {
         this.transactionRepository = transactionRepository;
         this.userService = userService;
+        this.restTemplate = restTemplate;
     }
 
     public void createTransaction(TransactionDTO transaction) {
@@ -25,11 +40,37 @@ public class TransactionService {
 
         userService.validatesTransaction(sender, transaction.value());
 
-        if ()
+        boolean authorized = this.authorizedTransaction(sender, transaction.value());
+        if (!authorized) {
+            throw new CreateTransactionException("Transação inválida ou não autorizada");
+        }
+        persistTransaction(sender, transaction, receiver);
     }
 
-    public boolean authorizedTransaction(){
+    public boolean authorizedTransaction(User sender, BigDecimal value) {
+        ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
 
+        if (response.getStatusCode() == HttpStatus.OK) {
+            String message = String.valueOf(response.getBody());
+            return "Autorizado".equalsIgnoreCase(message);
+        } else
+            return false;
+    }
+
+    private void persistTransaction(User sender, TransactionDTO transaction,
+                                    User receiver) {
+        Transaction newTransaction = new Transaction();
+        newTransaction.setSender(sender);
+        newTransaction.setValue(transaction.value());
+        newTransaction.setReceiver(receiver);
+        newTransaction.setTimestamp(LocalDateTime.now());
+
+        sender.setBalance(sender.getBalance().subtract(transaction.value()));
+        receiver.setBalance(sender.getBalance().add(transaction.value()));
+
+        this.transactionRepository.save(newTransaction);
+        this.userService.saveUser(sender);
+        this.userService.saveUser(receiver);
     }
 
 }
