@@ -34,10 +34,10 @@ public class UserService {
         }
     }
 
-    public User findUserById(UUID id, Throwable error) {
+    public User findUserById(UUID id) {
         return this.userRepository.findUserById(id)
                 .orElseThrow(() -> new NotFoundException(
-                        "Usuário não encontrado", error.getCause()));
+                        "Usuário não encontrado"));
     }
 
 }
