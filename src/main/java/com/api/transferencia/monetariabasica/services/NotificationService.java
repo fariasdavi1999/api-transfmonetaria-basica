@@ -3,6 +3,7 @@ package com.api.transferencia.monetariabasica.services;
 import com.api.transferencia.monetariabasica.commons.exceptions.NotificationException;
 import com.api.transferencia.monetariabasica.dtos.NotificationDTO;
 import com.api.transferencia.monetariabasica.models.user.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ public class NotificationService {
     @Value("${client.notification-mock.url}")
     private String url;
 
+    @Autowired
     public NotificationService(RestTemplate restTemplate, Logger logger) {
         this.restTemplate = restTemplate;
         this.logger = logger;
