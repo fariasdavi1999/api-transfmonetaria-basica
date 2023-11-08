@@ -18,13 +18,12 @@ import java.util.logging.Logger;
 public class UserService {
     private final UserRepository userRepository;
 
-    private final Logger logger;
+    private final Logger logger = Logger.getLogger(UserService.class.getName());
 
     @Autowired
-    public UserService(UserRepository userRepository,
-                       Logger logger) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.logger = logger;
+
     }
 
     public void validatesTransaction(User sender, BigDecimal value) {

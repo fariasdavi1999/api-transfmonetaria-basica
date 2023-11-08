@@ -17,15 +17,14 @@ import java.util.logging.Logger;
 public class NotificationService {
     private final RestTemplate restTemplate;
 
-    private final Logger logger;
+    private final Logger logger = Logger.getLogger(NotificationService.class.getName());
 
     @Value("${client.notification-mock.url}")
     private String url;
 
     @Autowired
-    public NotificationService(RestTemplate restTemplate, Logger logger) {
+    public NotificationService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
-        this.logger = logger;
     }
 
     public void notify(User user, String message) {

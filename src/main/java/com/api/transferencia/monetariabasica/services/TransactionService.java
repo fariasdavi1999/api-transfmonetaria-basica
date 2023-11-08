@@ -25,18 +25,16 @@ public class TransactionService {
 
     private final RestTemplate restTemplate;
 
-    private final Logger logger;
+    private final Logger logger = Logger.getLogger(TransactionService.class.getName());
     @Value("${client.authorization-mock.url}")
     private String url;
 
     @Autowired
     public TransactionService(TransactionRepository transactionRepository,
-                              UserService userService, RestTemplate restTemplate,
-                              Logger logger) {
+                              UserService userService, RestTemplate restTemplate) {
         this.transactionRepository = transactionRepository;
         this.userService = userService;
         this.restTemplate = restTemplate;
-        this.logger = logger;
     }
 
     public void createTransaction(TransactionDTO transaction) {
