@@ -35,9 +35,10 @@ public class TransactionService {
         this.transactionRepository = transactionRepository;
         this.userService = userService;
         this.restTemplate = restTemplate;
+
     }
 
-    public void createTransaction(TransactionDTO transaction) {
+    public Transaction createTransaction(TransactionDTO transaction) {
         logger.info("Criando Transaction");
         User sender = this.userService.findUserById(transaction.senderId());
         User receiver = this.userService.findUserById(transaction.receiverId());
@@ -49,7 +50,7 @@ public class TransactionService {
             logger.warning("Erro ao criar transaction");
             throw new CreateTransactionException("Transação inválida ou não autorizada");
         }
-        persistTransaction(sender, transaction, receiver);
+        return persistTransaction(sender, transaction, receiver);
     }
 
     public boolean authorizedTransaction(User sender, BigDecimal value) {
@@ -62,8 +63,8 @@ public class TransactionService {
             return false;
     }
 
-    private void persistTransaction(User sender, TransactionDTO transaction,
-                                    User receiver) {
+    private Transaction persistTransaction(User sender, TransactionDTO transaction,
+                                           User receiver) {
         logger.info("Persistindo transaction");
         Transaction newTransaction = new Transaction();
         newTransaction.setSender(sender);
@@ -77,6 +78,24 @@ public class TransactionService {
         this.transactionRepository.save(newTransaction);
         this.userService.saveUser(sender);
         this.userService.saveUser(receiver);
+
+        new SendNotification().sendNotificationSender(sender, "Transação realizada!");
+
+        return newTransaction;
+    }
+
+    private record SendNotification() {
+
+        private static NotificationService notificationService;
+
+
+        public void sendNotificationSender(User sender, String message) {
+            this.notificationService.notify(sender, message);
+        }
+
+        public void sendNotificationReceiver(User receiver, String message) {
+            this.notificationService.notify(receiver, message);
+        }
     }
 
 }
