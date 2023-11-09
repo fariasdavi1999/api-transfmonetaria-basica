@@ -25,17 +25,20 @@ public class TransactionService {
 
     private final RestTemplate restTemplate;
 
+    private final NotificationService notificationService;
+
     private final Logger logger = Logger.getLogger(TransactionService.class.getName());
     @Value("${client.authorization-mock.url}")
     private String url;
 
     @Autowired
     public TransactionService(TransactionRepository transactionRepository,
-                              UserService userService, RestTemplate restTemplate) {
+                              UserService userService, RestTemplate restTemplate,
+                              NotificationService notificationService) {
         this.transactionRepository = transactionRepository;
         this.userService = userService;
         this.restTemplate = restTemplate;
-
+        this.notificationService = notificationService;
     }
 
     public Transaction createTransaction(TransactionDTO transaction) {
@@ -54,6 +57,7 @@ public class TransactionService {
     }
 
     public boolean authorizedTransaction(User sender, BigDecimal value) {
+        logger.info("Consumindo mock de autorização");
         ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
@@ -79,23 +83,16 @@ public class TransactionService {
         this.userService.saveUser(sender);
         this.userService.saveUser(receiver);
 
-        new SendNotification().sendNotificationSender(sender, "Transação realizada!");
+        sendNotification(sender, "Transação realizada!");
+
+        sendNotification(receiver, "Transação recebida!");
 
         return newTransaction;
     }
 
-    private record SendNotification() {
-
-        private static NotificationService notificationService;
-
-
-        public void sendNotificationSender(User sender, String message) {
-            this.notificationService.notify(sender, message);
-        }
-
-        public void sendNotificationReceiver(User receiver, String message) {
-            this.notificationService.notify(receiver, message);
-        }
+    private void sendNotification(User user, String message) {
+        notificationService.notify(user, message);
     }
+
 
 }
