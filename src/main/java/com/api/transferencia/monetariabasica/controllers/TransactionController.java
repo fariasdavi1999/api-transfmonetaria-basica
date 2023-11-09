@@ -4,6 +4,7 @@ import com.api.transferencia.monetariabasica.dtos.TransactionDTO;
 import com.api.transferencia.monetariabasica.models.transaction.Transaction;
 import com.api.transferencia.monetariabasica.services.TransactionService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ public class TransactionController {
 
     private final TransactionService transactionService;
 
+    @Autowired
     public TransactionController(TransactionService transaction) {
         this.transactionService = transaction;
     }
@@ -24,7 +26,8 @@ public class TransactionController {
     @PostMapping
     public ResponseEntity<Transaction> createTransaction(@Valid @RequestBody
                                                          TransactionDTO transaction) {
-        Transaction newTransaction = this.transactionService.createTransaction(transaction);
+        Transaction newTransaction =
+                this.transactionService.createTransaction(transaction);
         return new ResponseEntity<>(newTransaction, HttpStatus.CREATED);
     }
 
