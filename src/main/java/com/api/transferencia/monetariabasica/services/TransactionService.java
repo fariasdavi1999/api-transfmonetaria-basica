@@ -75,8 +75,8 @@ public class TransactionService {
                                            User receiver) {
         logger.info("Persistindo transaction");
         Transaction newTransaction = new Transaction();
-        newTransaction.setSender(sender);
         newTransaction.setValue(transaction.value());
+        newTransaction.setSender(sender);
         newTransaction.setReceiver(receiver);
         newTransaction.setTimestamp(LocalDateTime.now());
 
