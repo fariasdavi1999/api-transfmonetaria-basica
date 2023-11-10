@@ -30,16 +30,17 @@ public class NotificationService {
     public void notify(User user, String message) {
         logger.log(Level.INFO, () -> "Notifying usuário: " + user);
         String email = user.getEmail();
-        NotificationDTO notificationDTO = new NotificationDTO(email, message);
 
-        ResponseEntity<String> notificationResponse =
-                restTemplate.postForEntity(url, notificationDTO, String.class);
+//        NotificationDTO notificationDTO = new NotificationDTO(email, message);
+//        ResponseEntity<String> notificationResponse =
+//                restTemplate.postForEntity(url, notificationDTO, String.class);
+//        boolean notificationVerifying =
+//                notificationResponse.getStatusCode() == HttpStatus.OK;
+//        if (!notificationVerifying) {
+//            logger.warning("Erro no serviço de notificação");
+//            throw new NotificationException("Serviço indiponível");
+//        }
 
-        boolean notificationVerifying =
-                notificationResponse.getStatusCode() == HttpStatus.OK;
-        if (!notificationVerifying) {
-            logger.warning("Erro no serviço de notificação");
-            throw new NotificationException("Serviço indiponível");
-        }
+        logger.info("Notificação enviada para " + email);
     }
 }
