@@ -5,7 +5,6 @@ import com.api.transferencia.monetariabasica.dtos.TransactionDTO;
 import com.api.transferencia.monetariabasica.models.transaction.Transaction;
 import com.api.transferencia.monetariabasica.models.user.User;
 import com.api.transferencia.monetariabasica.repositories.TransactionRepository;
-import org.hibernate.mapping.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -15,6 +14,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 @Service
@@ -58,10 +59,13 @@ public class TransactionService {
 
     public boolean authorizedTransaction(User sender, BigDecimal value) {
         logger.info("Consumindo mock de autorização");
+
         ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
-            String message = String.valueOf(response.getBody());
+            String message =
+                    String.valueOf(
+                            Objects.requireNonNull(response.getBody()).get("message"));
             return "Autorizado".equalsIgnoreCase(message);
         } else
             return false;
