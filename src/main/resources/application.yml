@@ -33,6 +33,6 @@ spring:
 
 client:
   authorization-mock:
-    url: https://run.mocky.io/v3/b0d824b8-9040-4929-8710-138e05c510aa
+    url: https://run.mocky.io/v3/8997a273-ec48-4289-a1df-ecb95bad6e51
   notification-mock:
     url: http://o4d9z.mocklab.io/notify
