@@ -23,7 +23,6 @@ public class UserService {
     @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-
     }
 
     public void validatesTransaction(User sender, BigDecimal value) {
@@ -53,15 +52,14 @@ public class UserService {
     public List<User> getAllUsers() {
         List<User> response = this.userRepository.findAll();
         if (response.isEmpty()) {
-            throw new NotFoundException("Nenhum usuário cadastrado");
+            throw new NotFoundException("Nenhum usuário cadastrado ");
         }
         return response;
     }
 
     public User findUserById(UUID id) {
         return this.userRepository.findUserById(id)
-                .orElseThrow(() -> new NotFoundException(
-                        "Usuário não encontrado"));
+                .orElseThrow(
+                        () -> new NotFoundException("Usuário nao encontrado "));
     }
-
 }
