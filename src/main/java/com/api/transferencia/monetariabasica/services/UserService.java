@@ -51,7 +51,11 @@ public class UserService {
     }
 
     public List<User> getAllUsers() {
-        return this.userRepository.findAll();
+        List<User> response = this.userRepository.findAll();
+        if (response.isEmpty()) {
+            throw new NotFoundException("Nenhum usuário cadastrado");
+        }
+        return response;
     }
 
     public User findUserById(UUID id) {
