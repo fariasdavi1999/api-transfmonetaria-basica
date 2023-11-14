@@ -1,5 +1,6 @@
 package com.api.transferencia.monetariabasica.commons.exceptions.handler;
 
+import com.api.transferencia.monetariabasica.commons.exceptions.CreateTransactionException;
 import com.api.transferencia.monetariabasica.commons.exceptions.NotFoundException;
 import com.api.transferencia.monetariabasica.commons.exceptions.ValidateTransactionException;
 import jakarta.annotation.Nullable;
@@ -24,7 +25,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ProblemDetail handleDuplicateDataEntry(
             DataIntegrityViolationException exception) {
 
-        return createProblemDetail(exception, HttpStatus.BAD_REQUEST,
+        return createProblemDetail(exception.getCause(), HttpStatus.BAD_REQUEST,
                                    null,
                                    "Duplicate data entry",
                                    "Usuário com documento ou email já cadastrado",
@@ -51,7 +52,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return createProblemDetail(exception, HttpStatus.NOT_FOUND,
                                    null,
                                    "Not found",
-                                   "Nenhum usuário cadastrado",
+                                   exception.getMessage(),
                                    null,
                                    Map.of(TIMESTAMP, LocalDateTime.now()));
     }
@@ -63,6 +64,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return createProblemDetail(exception, HttpStatus.BAD_REQUEST,
                                    null,
                                    "Transação inválida",
+                                   exception.getMessage(),
+                                   null,
+                                   Map.of(TIMESTAMP, LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(CreateTransactionException.class)
+    public ProblemDetail handleCreateTransaction(CreateTransactionException exception) {
+        return createProblemDetail(exception, HttpStatus.BAD_REQUEST,
+                                   null,
+                                   "Transação",
                                    exception.getMessage(),
                                    null,
                                    Map.of(TIMESTAMP, LocalDateTime.now()));
