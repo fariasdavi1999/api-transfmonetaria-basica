@@ -26,7 +26,7 @@ public class UserService {
     }
 
     public void validatesTransaction(User sender, BigDecimal value) {
-        logger.info("Validando transaction");
+        logger.info("Validando transação");
         if (sender.getUserType() == UserType.TRADER) {
             throw new ValidateTransactionException(
                     "Usuário não pode realizar transações");
@@ -52,7 +52,8 @@ public class UserService {
     public List<User> getAllUsers() {
         List<User> response = this.userRepository.findAll();
         if (response.isEmpty()) {
-            throw new NotFoundException();
+            logger.warning("Nenhum usuario cadastrado");
+            throw new NotFoundException("No users");
         }
         return response;
     }
