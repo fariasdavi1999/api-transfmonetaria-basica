@@ -5,5 +5,5 @@ API de transferência bancária de um usuário a outro, baseado em um desafio pr
 
 Aprimoramento de tratamento de exceções, clean code e boas práticas da programação.
 
-<img width="532" alt="image" src="https://github.com/fariasdavi1999/api-transfmonetaria-basica/assets/81586394/949095a1-ad8a-4e30-9b98-23389cb5f8ef">
+<img width="566" alt="image" src="https://github.com/fariasdavi1999/api-transfmonetaria-basica/assets/81586394/7a3e68c5-b249-4e7b-8f56-eb646cf42c52">
 
