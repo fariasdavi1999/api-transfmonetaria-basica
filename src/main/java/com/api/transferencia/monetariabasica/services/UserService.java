@@ -52,14 +52,13 @@ public class UserService {
     public List<User> getAllUsers() {
         List<User> response = this.userRepository.findAll();
         if (response.isEmpty()) {
-            throw new NotFoundException("Nenhum usuário cadastrado ");
+            throw new NotFoundException();
         }
         return response;
     }
 
     public User findUserById(UUID id) {
         return this.userRepository.findUserById(id)
-                .orElseThrow(
-                        () -> new NotFoundException("Usuário nao encontrado "));
+                .orElseThrow();
     }
 }
