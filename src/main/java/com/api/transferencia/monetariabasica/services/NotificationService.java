@@ -17,7 +17,8 @@ import java.util.logging.Logger;
 public class NotificationService {
     private final RestTemplate restTemplate;
 
-    private final Logger logger = Logger.getLogger(NotificationService.class.getName());
+    private final Logger logger = Logger.getLogger(
+            NotificationService.class.getName());
 
     @Value("${client.notification-mock.url}")
     private String url;
@@ -31,16 +32,16 @@ public class NotificationService {
         logger.log(Level.INFO, () -> "Notifying usuário: " + user);
         String email = user.getEmail();
 
-//        NotificationDTO notificationDTO = new NotificationDTO(email, message);
-//        ResponseEntity<String> notificationResponse =
-//                restTemplate.postForEntity(url, notificationDTO, String.class);
-//        boolean notificationVerifying =
-//                notificationResponse.getStatusCode() == HttpStatus.OK;
-//        if (!notificationVerifying) {
-//            logger.warning("Erro no serviço de notificação");
-//            throw new NotificationException("Serviço indiponível");
-//        }
+        NotificationDTO notificationDTO = new NotificationDTO(email, message);
+        ResponseEntity<String> notificationResponse =
+                restTemplate.postForEntity(url, notificationDTO, String.class);
+        boolean notificationVerifying =
+                notificationResponse.getStatusCode() == HttpStatus.OK;
+        if (!notificationVerifying) {
+            logger.warning("Erro no serviço de notificação");
+            throw new NotificationException("Serviço indiponível");
+        }
 
-        logger.info("Notificação enviada para " + email);
+        logger.log(Level.INFO, () -> "Notification: " + email);
     }
 }
