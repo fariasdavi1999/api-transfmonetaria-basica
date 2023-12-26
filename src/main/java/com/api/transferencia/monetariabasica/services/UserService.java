@@ -29,7 +29,8 @@ public class UserService {
         logger.info("Validando transação");
         if (sender.getUserType() == UserType.TRADER) {
             throw new ValidateTransactionException(
-                    "Usuário não pode realizar transações");
+                    "Usuário " + sender.getUserType() +
+                            " não pode realizar transações");
         }
         if (sender.getBalance().compareTo(value) < 0) {
             throw new ValidateTransactionException("Usuário não tem saldo");
